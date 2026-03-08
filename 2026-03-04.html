@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baromètre PasseGo — 4 mars 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
+
+:root {
+  --bg:#ffffff;--bg2:#f8fafc;--bg3:#f1f5f9;
+  --accent:#3b82f6;--accent2:#6366f1;--accent3:#8b5cf6;
+  --green:#10b981;--green-bg:rgba(16,185,129,.08);--green-border:rgba(16,185,129,.3);
+  --yellow:#f59e0b;--yellow-bg:rgba(245,158,11,.08);--yellow-border:rgba(245,158,11,.3);
+  --red:#ef4444;--red-bg:rgba(239,68,68,.08);--red-border:rgba(239,68,68,.3);
+  --blue-bg:rgba(59,130,246,.08);--blue-border:rgba(59,130,246,.3);
+  --text:#0f172a;--text2:#475569;--border:rgba(0,0,0,.08);--muted:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;overflow-x:hidden;}
+
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+.stagger>*{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease;}
+.stagger.visible>*:nth-child(1){opacity:1;transform:none;transition-delay:.05s;}
+.stagger.visible>*:nth-child(2){opacity:1;transform:none;transition-delay:.15s;}
+.stagger.visible>*:nth-child(3){opacity:1;transform:none;transition-delay:.25s;}
+.stagger.visible>*:nth-child(4){opacity:1;transform:none;transition-delay:.35s;}
+.stagger.visible>*:nth-child(5){opacity:1;transform:none;transition-delay:.45s;}
+.stagger.visible>*:nth-child(6){opacity:1;transform:none;transition-delay:.55s;}
+.stagger.visible>*:nth-child(7){opacity:1;transform:none;transition-delay:.65s;}
+.stagger.visible>*:nth-child(8){opacity:1;transform:none;transition-delay:.75s;}
+
+/* PROGRESS */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3));z-index:200;transition:width .1s;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-brand{display:flex;align-items:center;gap:10px;}
+.nav-brand img{width:28px;height:28px;object-fit:contain;border-radius:6px;}
+.nav-logo{font-size:13px;font-weight:800;letter-spacing:1px;}
+.nav-logo .passe{color:#2D2D2D;}
+.nav-logo .go{color:#1B7A3D;}
+.nav-links{display:flex;gap:6px;}
+.nav-links a{font-size:11px;font-weight:600;color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:8px;transition:background .2s,color .2s;}
+.nav-links a:hover{background:var(--blue-bg);color:var(--accent);}
+.nav-premium-badge{font-size:10px;font-weight:700;letter-spacing:1px;background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(239,68,68,.06));border:1px solid rgba(239,68,68,.35);color:#dc2626;padding:4px 12px;border-radius:100px;display:flex;align-items:center;gap:6px;}
+.nav-premium-badge::before{content:'⚔️';font-size:9px;}
+
+/* COVER */
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 40px 80px;text-align:center;position:relative;overflow:hidden;}
+.cover-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(59,130,246,.07) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(239,68,68,.04) 0%,transparent 60%);}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:60px 60px;}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:float 8s ease-in-out infinite;}
+.orb1{width:400px;height:400px;background:rgba(59,130,246,.06);top:-100px;left:-100px;}
+.orb2{width:300px;height:300px;background:rgba(239,68,68,.04);bottom:-50px;right:-50px;animation-delay:-4s;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-30px);}}
+
+.logo-img{position:relative;z-index:2;margin-bottom:28px;width:90px;height:90px;object-fit:contain;border-radius:16px;animation:fadeDown .8s ease .1s both;}
+.cover-badge{position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(239,68,68,.05));border:1px solid rgba(239,68,68,.35);color:#dc2626;padding:8px 20px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;animation:fadeDown .8s ease .2s both;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#dc2626;animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
+.cover-logo{position:relative;z-index:2;font-size:12px;font-weight:800;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;animation:fadeDown .8s ease .3s both;}
+.cover-logo .passe{color:#2D2D2D;}
+.cover-logo .go{color:#1B7A3D;}
+.cover h1{position:relative;z-index:2;font-family:'Playfair Display',serif;font-size:clamp(52px,7vw,90px);font-weight:900;line-height:1.05;background:linear-gradient(135deg,#1e3a8a 0%,#3b82f6 40%,#6366f1 70%,#8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;animation:fadeUp .9s ease .4s both;}
+.cover-sub{position:relative;z-index:2;font-size:16px;color:var(--text2);margin-bottom:40px;font-style:italic;animation:fadeUp .9s ease .5s both;}
+
+.saison-pill{position:relative;z-index:2;display:inline-flex;align-items:center;gap:10px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.3);border-radius:100px;padding:10px 24px;margin-bottom:20px;animation:fadeUp .9s ease .55s both;}
+.saison-pill-icon{font-size:18px;}
+.saison-pill-text{font-size:13px;font-weight:700;color:#dc2626;}
+.saison-pill-sub{font-size:12px;color:var(--text2);}
+.signal-pct{font-size:13px;font-weight:800;color:#dc2626;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:100px;padding:2px 10px;margin-left:4px;}
+
+.cover-tags{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:48px;animation:fadeUp .9s ease .6s both;}
+.cover-tag{background:rgba(0,0,0,.03);border:1px solid var(--border);padding:8px 18px;border-radius:8px;font-size:12px;color:var(--text2);font-weight:500;transition:border-color .2s,color .2s;cursor:default;}
+.cover-tag:hover{border-color:rgba(59,130,246,.4);color:var(--text);}
+.cover-meta{position:relative;z-index:2;font-size:11px;color:var(--muted);letter-spacing:1.5px;animation:fadeUp .9s ease .7s both;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.scroll-ind{position:relative;z-index:2;margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase;animation:fadeUp 1s ease 1s both;}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollPulse 2s ease infinite;}
+@keyframes scrollPulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+/* SECTIONS */
+.content-section{padding:100px 40px;border-top:1px solid var(--border);}
+.content-section:nth-child(odd){background:var(--bg);}
+.content-section:nth-child(even){background:var(--bg2);}
+.inner{max-width:960px;margin:0 auto;}
+.section-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.section-header{display:flex;align-items:flex-start;gap:24px;margin-bottom:48px;}
+.section-num{font-size:72px;font-weight:900;line-height:1;font-family:'Playfair Display',serif;flex-shrink:0;background:linear-gradient(135deg,rgba(59,130,246,.25),rgba(99,102,241,.15));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-head-text .section-label{margin-bottom:6px;}
+.section-head-text h2{font-family:'Playfair Display',serif;font-size:36px;color:var(--text);font-weight:800;}
+.section-head-text .en{font-size:13px;color:var(--muted);font-style:italic;margin-top:4px;}
+
+/* CARDS */
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:20px;transition:border-color .25s,box-shadow .25s;}
+.card:hover{border-color:rgba(59,130,246,.2);box-shadow:0 8px 32px rgba(0,0,0,.06);}
+.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;color:var(--text2);}
+.card p{color:var(--text2);font-size:14px;margin-bottom:8px;}
+.card p:last-child{margin-bottom:0;}
+
+/* CALLOUTS */
+.principle{background:var(--blue-bg);border:1px solid var(--blue-border);border-left:3px solid var(--accent);border-radius:14px;padding:24px 28px;margin:24px 0;}
+.principle .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.principle p{color:var(--text);font-size:14px;}
+.rule{background:var(--red-bg);border:1px solid var(--red-border);border-left:3px solid var(--red);border-radius:14px;padding:20px 24px;margin:20px 0;}
+.rule .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.rule p{color:var(--text2);font-size:14px;}
+.tip{background:var(--green-bg);border:1px solid var(--green-border);border-left:3px solid var(--green);border-radius:14px;padding:20px 24px;margin:20px 0;}
+.tip .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.tip p{color:var(--text2);font-size:14px;}
+.warning{background:var(--yellow-bg);border:1px solid var(--yellow-border);border-left:3px solid var(--yellow);border-radius:14px;padding:20px 24px;margin:20px 0;}
+.warning .label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:8px;}
+.warning p{color:var(--text2);font-size:14px;}
+
+/* EXPLAIN BOX */
+.explain{background:var(--blue-bg);border:1px solid var(--blue-border);border-left:3px solid var(--accent);border-radius:14px;padding:16px 20px;margin:16px 0;display:flex;gap:12px;align-items:flex-start;}
+.explain-icon{font-size:15px;flex-shrink:0;margin-top:2px;}
+.explain p{font-size:13px;color:var(--text2);line-height:1.7;margin:0;}
+.explain strong{color:var(--text);}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;margin:28px 0;border-radius:14px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;background:var(--bg);}
+thead tr{background:rgba(59,130,246,.05);}
+th{padding:14px 18px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:13px 18px;font-size:13px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(59,130,246,.03);}
+td:first-child{font-weight:700;color:var(--text);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;white-space:nowrap;vertical-align:middle;line-height:1.4;}
+.b-up{background:var(--green-bg);color:#059669;border:1px solid var(--green-border);}
+.b-down{background:var(--red-bg);color:#dc2626;border:1px solid var(--red-border);}
+.b-neutral{background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+.b-cons{background:var(--yellow-bg);color:#b45309;border:1px solid var(--yellow-border);}
+.b-impact-high{background:var(--red-bg);color:#dc2626;border:1px solid var(--red-border);}
+.b-impact-med{background:var(--yellow-bg);color:#b45309;border:1px solid var(--yellow-border);}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:14px;margin:28px 0;}
+.step{display:flex;gap:20px;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:24px;transition:border-color .25s,transform .25s;}
+.step:hover{border-color:rgba(59,130,246,.3);transform:translateX(4px);}
+.step-num{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0;color:#fff;}
+.step-content h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.step-content p,.step-content ul{font-size:13px;color:var(--text2);}
+.step-content ul{padding-left:16px;}
+.step-content li{margin-bottom:4px;}
+.step-content strong{color:var(--text);}
+
+/* POSITION ROWS */
+.positions{display:flex;flex-direction:column;gap:10px;margin:24px 0;}
+.pos{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:20px 24px;display:flex;align-items:flex-start;gap:16px;transition:border-color .25s,transform .25s;}
+.pos:hover{border-color:rgba(59,130,246,.3);transform:translateX(4px);}
+.pos-dir{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:8px;flex-shrink:0;min-width:64px;text-align:center;margin-top:2px;}
+.pos-long{background:var(--green-bg);color:#059669;border:1px solid var(--green-border);}
+.pos-short{background:var(--red-bg);color:#dc2626;border:1px solid var(--red-border);}
+.pos-watch{background:var(--yellow-bg);color:#b45309;border:1px solid var(--yellow-border);}
+.pos-info{}
+.pos-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.5;}
+.pos-note{font-size:13px;color:var(--text2);line-height:1.75;}
+.pos-note strong{color:var(--text);}
+
+/* WORLD GRID */
+.world-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0;}
+.country{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:20px;transition:border-color .25s,transform .25s;}
+.country:hover{border-color:rgba(59,130,246,.3);transform:translateY(-2px);}
+.country-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.country-name{font-size:14px;font-weight:700;color:var(--text);}
+.country-conf{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.country-note{font-size:12px;color:var(--text2);line-height:1.65;}
+.s-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;}
+.sp{background:rgba(16,185,129,.1);color:#059669;border:1px solid var(--green-border);}
+.se{background:var(--yellow-bg);color:#b45309;border:1px solid var(--yellow-border);}
+.sa{background:var(--red-bg);color:#dc2626;border:1px solid var(--red-border);}
+.sh{background:var(--blue-bg);color:var(--accent);border:1px solid var(--blue-border);}
+
+/* SAISONS MONDE */
+.saisons-monde{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0;}
+.sm-card{border-radius:14px;padding:20px;border:1px solid;text-align:center;transition:transform .25s;}
+.sm-card:hover{transform:translateY(-3px);}
+.sm-p{background:rgba(16,185,129,.05);border-color:rgba(16,185,129,.2);}
+.sm-e{background:var(--yellow-bg);border-color:var(--yellow-border);}
+.sm-a{background:var(--red-bg);border-color:var(--red-border);}
+.sm-h{background:var(--blue-bg);border-color:var(--blue-border);}
+.sm-icon{font-size:24px;margin-bottom:8px;}
+.sm-name{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.sm-p .sm-name{color:#059669;}
+.sm-e .sm-name{color:#b45309;}
+.sm-a .sm-name{color:#dc2626;}
+.sm-h .sm-name{color:var(--accent);}
+.sm-count{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;line-height:1;color:var(--text);margin-bottom:4px;}
+.sm-pct{font-size:11px;color:var(--text2);}
+
+/* VOYANTS */
+.voyants{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;}
+.voyant{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:20px;transition:border-color .25s,transform .25s;}
+.voyant:hover{transform:translateY(-3px);}
+.voyant-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);margin-bottom:6px;}
+.voyant-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--text);line-height:1.1;margin-bottom:4px;}
+.voyant-seuil{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.voyant-note{font-size:12px;color:var(--text2);line-height:1.6;}
+.v-ok{border-top:3px solid var(--green);}
+.v-warn{border-top:3px solid var(--yellow);}
+.v-danger{border-top:3px solid var(--red);}
+.v-cat{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;margin-top:8px;}
+.vc-ok{background:var(--green-bg);color:#059669;border:1px solid var(--green-border);}
+.vc-warn{background:var(--yellow-bg);color:#b45309;border:1px solid var(--yellow-border);}
+.vc-danger{background:var(--red-bg);color:#dc2626;border:1px solid var(--red-border);}
+.vc-watch{background:var(--blue-bg);color:var(--accent);border:1px solid var(--blue-border);}
+
+/* HIERARCHY */
+.hierarchy{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;}
+.hier{border-radius:14px;padding:22px;border:1px solid;transition:transform .25s;}
+.hier:hover{transform:translateY(-3px);}
+.hier-h{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.hier-val{font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.hier-desc{font-size:12px;color:var(--text2);line-height:1.6;}
+.hier-warn{background:var(--yellow-bg);border-color:var(--yellow-border);}
+.hier-warn .hier-h{color:#b45309;}
+.hier-confirm{background:var(--red-bg);border-color:var(--red-border);}
+.hier-confirm .hier-h{color:#dc2626;}
+.hier-watch{background:var(--blue-bg);border-color:var(--blue-border);}
+.hier-watch .hier-h{color:var(--accent);}
+
+/* NEXT REPORT */
+.next-report{background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(99,102,241,.06));border:1px solid var(--blue-border);border-radius:18px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:40px;}
+.next-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.next-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.next-sub{font-size:13px;color:var(--text2);}
+.next-icon{font-size:32px;}
+
+/* FOOTER */
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:80px 40px;text-align:center;position:relative;overflow:hidden;}
+.footer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 100%,rgba(59,130,246,.04),transparent);}
+.footer-logo{position:relative;font-size:13px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.footer p{position:relative;font-size:12px;color:var(--muted);margin-bottom:6px;}
+.footer .disclaimer{position:relative;max-width:640px;margin:28px auto 0;padding:18px 24px;background:rgba(0,0,0,.03);border:1px solid var(--border);border-radius:12px;font-size:11px;color:var(--muted);line-height:1.7;}
+
+/* BULLET LIST */
+.bullet-list{list-style:none;padding:0;}
+.bullet-list li{padding:10px 0 10px 22px;position:relative;font-size:13px;color:var(--text2);border-bottom:1px solid var(--border);}
+.bullet-list li:last-child{border-bottom:none;}
+.bullet-list li::before{content:'';position:absolute;left:0;top:19px;width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));}
+.bullet-list strong{color:var(--text);}
+
+@media(max-width:700px){
+  nav{padding:12px 20px;}.nav-links{display:none;}
+  .cover{padding:100px 24px 60px;}
+  .content-section{padding:60px 24px;}
+  .saisons-monde,.hierarchy,.voyants{grid-template-columns:repeat(2,1fr);}
+  .world-grid{grid-template-columns:1fr;}
+  .section-header{flex-direction:column;gap:8px;}
+  .section-num{font-size:48px;}
+  .pos{flex-direction:column;gap:10px;}
+  .next-report{flex-direction:column;}
+  th,td{padding:10px 12px;}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <div class="nav-brand">
+    <img src="https://raw.githubusercontent.com/PasseGo-Ca/regimeradar101/main/Logo%20PasseGo.jpg" alt="PasseGo" onerror="this.style.display='none'">
+    <div class="nav-logo"><span class="passe">Passe</span><span class="go">Go</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#s1">Contexte</a>
+    <a href="#s2">Marché</a>
+    <a href="#s3">Catalyseurs</a>
+    <a href="#s4">Positions</a>
+    <a href="#s5">BAG7</a>
+    <a href="#s6">Monde</a>
+    <a href="#s7">Voyants</a>
+    <a href="#s8">Plan d'action</a>
+  </div>
+  <div class="nav-premium-badge">Salle de Guerre · Premium</div>
+</nav>
+
+<!-- COVER -->
+<section class="cover">
+  <div class="cover-bg"></div>
+  <div class="grid-bg"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <img src="https://raw.githubusercontent.com/PasseGo-Ca/regimeradar101/main/Logo%20PasseGo.jpg" alt="PasseGo" class="logo-img" onerror="this.style.display='none'">
+
+  <div class="cover-badge"><div class="badge-dot"></div>Salle de Guerre · Rapport du jour</div>
+  <div class="cover-logo"><span class="passe">Passe</span><span class="go">Go</span></div>
+
+  <h1>Baromètre<br>PasseGo</h1>
+  <p class="cover-sub">Mercredi 4 mars 2026 · 7h30 EST · Rapport simplifié</p>
+
+  <div class="saison-pill">
+    <div class="saison-pill-icon">🍂</div>
+    <div>
+      <div class="saison-pill-text">SAISON : AUTOMNE — Croissance ↓ · Inflation ↑</div>
+      <div class="saison-pill-sub">Confiance du signal <span class="signal-pct">85%</span></div>
+    </div>
+  </div>
+
+  <div class="cover-tags">
+    <span class="cover-tag">Contexte du matin</span>
+    <span class="cover-tag">Photo du marché</span>
+    <span class="cover-tag">Catalyseurs ISM · NFP · CPI</span>
+    <span class="cover-tag">Positionnement PasseGo</span>
+    <span class="cover-tag">Tour du monde — 42 pays</span>
+    <span class="cover-tag">Voyants de préservation</span>
+  </div>
+
+  <div class="cover-meta">4 MARS 2026 · SALLE DE GUERRE · PASSEGO</div>
+  <div class="scroll-ind"><span>Défiler</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- S1 : CONTEXTE -->
+<section id="s1" class="content-section">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal-left">01</div>
+      <div class="section-head-text reveal-right">
+        <div class="section-label">Ce qui compte aujourd'hui</div>
+        <h2>Le contexte du matin</h2>
+        <div class="en">Morning context — What's driving today's session</div>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-title">🌍 D'où vient la faiblesse ce matin?</div>
+      <p>La pression de cette nuit vient de <strong style="color:var(--text)">l'Europe</strong>, pas des États-Unis. L'Allemagne et les grands indices européens sont en baisse de <strong style="color:var(--text)">7% sur la semaine</strong> — c'est une source externe de nervosité, pas le signe que l'économie américaine s'effondre.</p>
+      <p>Les mouvements intraday paraissent plus violents qu'ils ne le sont réellement. Pourquoi? La <strong style="color:var(--text)">structure du marché des options</strong> amplifie les swings : les investisseurs ont acheté beaucoup de protections (comme une assurance contre la baisse), et ces protections exagèrent chaque mouvement. Ne pas confondre volatilité amplifiée et panique réelle.</p>
+    </div>
+
+    <div class="rule reveal">
+      <div class="label">📡 Signal RegimeRadar — Automne confirmé à 85%</div>
+      <p>Entre le 27 février et le 3 mars, notre système a détecté <strong>46 changements de signaux</strong> sur les actifs suivis — dont <strong>38 détériorations</strong>. C'est la vague de dégradation la plus large depuis notre entrée en Automne. SPY, QQQ, AAPL, SLV, GLD : tous ont perdu du momentum. Ce n'est pas un accident — c'est la gravité macro qui fait son travail.</p>
+    </div>
+
+    <div class="warning reveal">
+      <div class="label">🎯 Catalyseur du jour — ISM Services PMI · 10h EST</div>
+      <p>L'<strong>ISM Services</strong> mesure la santé de <strong>75% de l'économie américaine</strong> (les services : restaurants, hôtels, soins de santé, finance…). Le consensus attend 53,5 — le précédent était à 53,8.</p>
+      <p style="margin-top:10px;"><strong>📖 Comment lire ce chiffre :</strong> Au-dessus de 50 = expansion. En dessous de 50 = contraction. Mais ce qui compte surtout, c'est la <em>direction</em> — est-ce que ça monte ou ça descend d'un mois à l'autre?</p>
+      <p style="margin-top:8px;">🔴 Sous 52 → risque de décrochage des actions américaines · 🟢 Au-dessus de 54 → rebond technique possible, mais on attend la confirmation avant d'agir.</p>
+    </div>
+
+    <div class="principle reveal">
+      <div class="label">💬 Citation du jour</div>
+      <p style="font-style:italic;">"En connaissant ce qui existe, on peut comprendre ce qui n'existe pas." — <strong>Miyamoto Musashi, Le Livre du Vide</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- S2 : PHOTO DU MARCHÉ -->
+<section id="s2" class="content-section">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal-left">02</div>
+      <div class="section-head-text reveal-right">
+        <div class="section-label">Ouverture 4 mars</div>
+        <h2>Photo du marché</h2>
+        <div class="en">Market snapshot — Open</div>
+      </div>
+    </div>
+
+    <div class="explain reveal">
+      <div class="explain-icon">📖</div>
+      <p><strong>Comment lire ce tableau :</strong> Le <strong>momentum</strong> = est-ce que ça monte ou descend en ce moment? La <strong>tendance</strong> = la direction à plus long terme. Quand les deux sont baissiers en même temps, c'est un signal fort de faiblesse. Quand les deux sont haussiers, l'actif est en force.</p>
+    </div>
+
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>Actif</th>
+            <th>C'est quoi?</th>
+            <th>Fourchette</th>
+            <th>Prix actuel</th>
+            <th>Momentum</th>
+            <th>Tendance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>SPY</td><td>500 plus grandes compagnies US</td><td>670–693</td><td>680,33 $</td><td><span class="badge b-neutral">→ Neutre</span></td><td><span class="badge b-neutral">→ Neutre</span></td></tr>
+          <tr><td>QQQ</td><td>100 plus grandes tech (Nasdaq)</td><td>590–617</td><td>601,58 $</td><td><span class="badge b-down">↓ Baissier</span></td><td><span class="badge b-down">↓ Baissier</span></td></tr>
+          <tr><td>IWM</td><td>Petites capitalisations US</td><td>254–266</td><td>259,24 $</td><td><span class="badge b-neutral">→ Neutre</span></td><td><span class="badge b-neutral">→ Neutre</span></td></tr>
+          <tr><td>GLD</td><td>Or — valeur refuge</td><td>448–493</td><td>468,14 $</td><td><span class="badge b-cons">→ Consolide</span></td><td><span class="badge b-up">↑ Haussier</span></td></tr>
+          <tr><td>SLV</td><td>Argent — métal industriel</td><td>64–86</td><td>74,68 $</td><td><span class="badge b-down">↓ Baissier</span></td><td><span class="badge b-down">↓ Baissier</span></td></tr>
+          <tr><td>XLE</td><td>Secteur Énergie (pétrole, gaz)</td><td>55–58</td><td>56,52 $</td><td><span class="badge b-up">↑ Haussier</span></td><td><span class="badge b-up">↑ Haussier</span></td></tr>
+          <tr><td>XLI</td><td>Secteur Industriels</td><td>173–179</td><td>175,44 $</td><td><span class="badge b-up">↑ Haussier</span></td><td><span class="badge b-up">↑ Haussier</span></td></tr>
+          <tr><td>TLT</td><td>Obligations gouvernementales 20 ans</td><td>89–91</td><td>89,43 $</td><td><span class="badge b-up">↑ Haussier</span></td><td><span class="badge b-up">↑ Haussier</span></td></tr>
+          <tr><td>VIX</td><td>Indice de la peur du marché</td><td>18–27</td><td>22,88</td><td><span class="badge b-down">↑ Monte</span></td><td><span class="badge b-down">↑ Monte</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tip reveal">
+      <div class="label">📊 Lecture rapide</div>
+      <p>Le <strong>VIX à 22,88</strong> — dans le haut de sa fourchette. Le marché est sur ses gardes, mais ce n'est pas encore la panique (le seuil d'alarme est à 26,94). Le <strong>Nasdaq (QQQ)</strong> est le plus faible avec double signal baissier. <strong>L'énergie (XLE) et les industriels (XLI)</strong> restent les leaders — exactement ce qu'on attend en Automne.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S3 : CATALYSEURS -->
+<section id="s3" class="content-section">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal-left">03</div>
+      <div class="section-head-text reveal-right">
+        <div class="section-label">Cette semaine</div>
+        <h2>Les catalyseurs à surveiller</h2>
+        <div class="en">Key data releases — What will move markets</div>
+      </div>
+    </div>
+
+    <p class="reveal" style="color:var(--text2);margin-bottom:24px;">Ces publications économiques sont comme des bulletins de santé de l'économie. Chacune peut faire bouger les marchés — certaines plus que d'autres.</p>
+
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Événement</th><th>C'est quoi?</th><th>Attendu</th><th>Précédent</th><th>Impact</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>4 mars</td><td>ISM Services PMI</td><td>Santé de 75% de l'éco américaine</td><td>53,5</td><td>53,8</td><td><span class="badge b-impact-high">🔴 Élevé</span></td></tr>
+          <tr><td>5 mars</td><td>Jobless Claims</td><td>Nb de demandes d'assurance-emploi</td><td>215k</td><td>212k</td><td><span class="badge b-impact-med">🟡 Moyen</span></td></tr>
+          <tr><td>6 mars</td><td>Non Farm Payrolls</td><td>Nb de nouveaux emplois créés</td><td>60k</td><td>130k</td><td><span class="badge b-impact-high">🔴 Très élevé</span></td></tr>
+          <tr><td>6 mars</td><td>Taux de chômage</td><td>% de la population sans emploi</td><td>4,3%</td><td>4,3%</td><td><span class="badge b-impact-high">🔴 Élevé</span></td></tr>
+          <tr><td>11 mars</td><td>CPI (Inflation)</td><td>Hausse des prix à la consommation</td><td>—</td><td>0,3% / 2,5%</td><td><span class="badge b-impact-high">🔴 Très élevé</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule reveal">
+      <div class="label">⚠️ Le vrai test de la semaine — NFP vendredi</div>
+      <p>On attend seulement <strong>60 000 nouveaux emplois</strong> vendredi — contre <strong>130 000 le mois dernier</strong>. C'est une chute de plus de 50%.</p>
+      <p style="margin-top:10px;"><strong>Pourquoi c'est important en Automne?</strong> Moins d'emplois = les entreprises paient plus par employé (inflationnaire) ET l'économie ralentit en même temps. C'est exactement le double problème de la stagflation — l'inflation monte pendant que la croissance baisse. Si le chiffre confirme ~60k, ce sera le signal le plus fort depuis janvier que l'Automne est <strong>structurel</strong>, pas juste passager.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S4 : POSITIONS -->
+<section id="s4" class="content-section">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal-left">04</div>
+      <div class="section-head-text reveal-right">
+        <div class="section-label">Mise à jour du portefeuille</div>
+        <h2>Comment on est placés en Automne</h2>
+        <div class="en">Portfolio positioning — Autumn regime update</div>
+      </div>
+    </div>
+
+    <p class="reveal" style="color:var(--text2);margin-bottom:8px;">En Automne (croissance ↓ + inflation ↑), on favorise l'énergie, les matières premières, l'or, et les secteurs défensifs. On réduit la technologie et les actions de croissance.</p>
+
+    <div class="explain reveal">
+      <div class="explain-icon">📖</div>
+      <p><strong>LONG =</strong> on détient cet actif. · <strong>ÉVITER =</strong> on réduit fortement ou on n'y touche pas. · <strong>ATTENTION =</strong> la situation a changé, on gère activement le risque.</p>
+    </div>
+
+    <div class="positions stagger">
+      <div class="pos">
+        <div class="pos-dir pos-long">LONG</div>
+        <div class="pos-info">
+          <div class="pos-name">XLE — Énergie <span class="badge b-up">↑ Haussier</span></div>
+          <div class="pos-note"><strong>Leader #1 du régime Automne.</strong> L'énergie performe quand l'inflation monte — c'est l'actif le plus aligné à notre saison. La situation géopolitique au Détroit d'Ormuz (voir section 6) renforce ce signal. On maintient.</div>
+        </div>
+      </div>
+      <div class="pos">
+        <div class="pos-dir pos-long">LONG</div>
+        <div class="pos-info">
+          <div class="pos-name">XLI — Industriels <span class="badge b-up">↑ Haussier</span></div>
+          <div class="pos-note">Signal stable et confirmé. Les industriels résistent bien. On maintient.</div>
+        </div>
+      </div>
+      <div class="pos">
+        <div class="pos-dir pos-long">LONG</div>
+        <div class="pos-info">
+          <div class="pos-name">GLD — Or <span class="badge b-cons">→ Consolide</span></div>
+          <div class="pos-note">Le momentum a faibli — l'or reprend son souffle après une forte hausse. Mais la tendance de fond reste intacte. La corrélation entre l'or et l'énergie (0,798) confirme qu'on est dans le bon positionnement Automne. <strong>On garde, mais on n'ajoute pas de nouvelles unités pour le moment.</strong></div>
+        </div>
+      </div>
+      <div class="pos">
+        <div class="pos-dir pos-watch">ATTENTION</div>
+        <div class="pos-info">
+          <div class="pos-name">SLV — Argent <span class="badge b-down">↓ Baissier</span></div>
+          <div class="pos-note">Momentum ET tendance tous les deux baissiers. L'argent est un métal industriel — il souffre quand la croissance ralentit. Deux options actives : <strong>(A) sortir la position</strong> pour limiter les dégâts, ou <strong>(B) vendre des options</strong> pour profiter de la volatilité extrême. Décision après l'ISM ce matin.</div>
+        </div>
+      </div>
+      <div class="pos">
+        <div class="pos-dir pos-long">LONG</div>
+        <div class="pos-info">
+          <div class="pos-name">XLU — Services publics (Utilities) <span class="badge b-up">↑ Haussier</span></div>
+          <div class="pos-note">Refuge défensif classique — électricité, eau, gaz. Les gens paient leurs factures même en récession. Signal fort en Automne.</div>
+        </div>
+      </div>
+      <div class="pos">
+        <div class="pos-dir pos-long">LONG</div>
+        <div class="pos-info">
+          <div class="pos-name">XLV — Santé <span class="badge b-up">↑ Haussier</span></div>
+          <div class="pos-note">Rotation défensive confirmée. Les soins de santé résistent bien aux ralentissements économiques — les gens ont toujours besoin de médicaments.</div>
+        </div>
+      </div>
+      <div class="pos">
+        <div class="pos-dir pos-long">LONG</div>
+        <div class="pos-info">
+          <div class="pos-name">TLT / IEF — Obligations d'État <span class="badge b-up">↑ Haussier</span></div>
+          <div class="pos-note"><strong>Signal surprenant à surveiller de près.</strong> Des obligations qui montent en Automne = les gros investisseurs fuient vers la sécurité. C'est aussi un signe précoce que <strong>l'Hiver pourrait approcher</strong> — les obligations anticipent souvent le prochain régime avant les actions.</div>
+        </div>
+      </div>
+      <div class="pos">
+        <div class="pos-dir pos-short">ÉVITER</div>
+        <div class="pos-info">
+          <div class="pos-name">QQQ — Nasdaq 100 / Tech <span class="badge b-down">↓ Baissier</span></div>
+          <div class="pos-note">Momentum ET tendance baissiers confirmés. On sous-pondère fortement la technologie en Automne. La section suivante sur les méga-caps confirme ce positionnement.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S5 : BAG7 -->
+<section id="s5" class="content-section">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal-left">05</div>
+      <div class="section-head-text reveal-right">
+        <div class="section-label">Les géants technologiques</div>
+        <h2>Les méga-caps (BAG7)</h2>
+        <div class="en">Big Tech — Where are the giants?</div>
+      </div>
+    </div>
+
+    <p class="reveal" style="color:var(--text2);margin-bottom:20px;">Les 7-8 plus grandes compagnies technologiques représentent une énorme part du S&amp;P 500 et du Nasdaq. Quand elles vont mal, tout le marché le ressent.</p>
+
+    <div class="rule reveal">
+      <div class="label">📊 Résumé — 6 sur 8 en mode baissier</div>
+      <p>Sur les 8 titres suivis, <strong>6 sont baissiers, 1 est neutre (NVDA) et 1 est en consolidation (META)</strong>. C'est la confirmation que la technologie n'est pas l'endroit où être en régime d'Automne.</p>
+    </div>
+
+    <div class="tbl-wrap reveal">
+      <table>
+        <thead>
+          <tr><th>Titre</th><th>Prix</th><th>Momentum</th><th>Tendance</th><th>Notre lecture</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>NVDA — Nvidia</td><td>180,05 $</td><td><span class="badge b-neutral">→ Neutre</span></td><td><span class="badge b-neutral">→ Neutre</span></td><td>Amélioration vs semaine passée — à surveiller</td></tr>
+          <tr><td>AAPL — Apple</td><td>263,75 $</td><td><span class="badge b-down">↓ Baissier</span></td><td><span class="badge b-neutral">→ Neutre</span></td><td>Cassure du momentum confirmée</td></tr>
+          <tr><td>MSFT — Microsoft</td><td>403,93 $</td><td><span class="badge b-down">↓ Baissier</span></td><td><span class="badge b-down">↓ Baissier</span></td><td>Double baissier — on évite</td></tr>
+          <tr><td>AMZN — Amazon</td><td>208,73 $</td><td><span class="badge b-down">↓ Baissier</span></td><td><span class="badge b-down">↓ Baissier</span></td><td>Double baissier — on évite</td></tr>
+          <tr><td>META</td><td>655,08 $</td><td><span class="badge b-cons">→ Consolide</span></td><td><span class="badge b-down">↓ Baissier</span></td><td>Tendance baissière — proche du haut de fourchette</td></tr>
+          <tr><td>GOOGL — Alphabet</td><td>303,58 $</td><td><span class="badge b-down">↓ Baissier</span></td><td><span class="badge b-down">↓ Baissier</span></td><td>Double baissier — on évite</td></tr>
+          <tr><td>TSLA — Tesla</td><td>392,43 $</td><td><span class="badge b-down">↓ Baissier</span></td><td><span class="badge b-down">↓ Baissier</span></td><td>⚠️ Options bon marché — volatilité faible, risque élevé</td></tr>
+          <tr><td>ORCL — Oracle</td><td>149,03 $</td><td><span class="badge b-down">↓ Baissier</span></td><td><span class="badge b-down">↓ Baissier</span></td><td>🚨 IV Rank 90% — options très chères. DANGER.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="explain reveal">
+      <div class="explain-icon">📖</div>
+      <p><strong>IV Rank (Rang de volatilité implicite) :</strong> Mesure à quel point les options sont chères vs leur historique. À 90% pour Oracle, ça veut dire qu'elles n'ont été aussi chères que dans 10% du temps historiquement. En général, ça indique qu'un événement majeur approche (résultats, annonce). Dans ce contexte, <strong>acheter des options est très coûteux — mais en vendre peut être lucratif.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- S6 : MONDE -->
+<section id="s6" class="content-section">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal-left">06</div>
+      <div class="section-head-text reveal-right">
+        <div class="section-label">Modèle CIP — 42 pays</div>
+        <h2>Tour du monde</h2>
+        <div class="en">Global regime map — CIP Model</div>
+      </div>
+    </div>
+
+    <p class="reveal" style="color:var(--text2);margin-bottom:24px;">Notre modèle CIP (Croissance + Inflation + Politique monétaire) classe 42 pays dans l'une des 4 saisons économiques. Voici la répartition actuelle.</p>
+
+    <div class="saisons-monde stagger">
+      <div class="sm-card sm-p"><div class="sm-icon">🌱</div><div class="sm-name">Printemps</div><div class="sm-count">8</div><div class="sm-pct">19% du PIB mondial</div></div>
+      <div class="sm-card sm-e"><div class="sm-icon">☀️</div><div class="sm-name">Été</div><div class="sm-count">14</div><div class="sm-pct">33% du PIB mondial</div></div>
+      <div class="sm-card sm-a"><div class="sm-icon">🍂</div><div class="sm-name">Automne</div><div class="sm-count">12</div><div class="sm-pct">29% du PIB mondial</div></div>
+      <div class="sm-card sm-h"><div class="sm-icon">❄️</div><div class="sm-name">Hiver</div><div class="sm-count">8</div><div class="sm-pct">19% du PIB mondial</div></div>
+    </div>
+
+    <div class="world-grid stagger">
+      <div class="country">
+        <div class="country-header"><div class="country-name">🇺🇸 États-Unis</div><span class="s-pill sa">🍂 Automne · 92%</span></div>
+        <div class="country-note">Les emplois ADP ressortis à +63k vs 19k attendus — la Fed est coincée : l'économie reste résiliente mais l'inflation continue de monter. Impossible de baisser les taux dans ce contexte.</div>
+      </div>
+      <div class="country">
+        <div class="country-header"><div class="country-name">🇨🇦 Canada</div><span class="s-pill sh">❄️ Hiver · 78%</span></div>
+        <div class="country-note">Croissance quasi nulle + inflation en baisse. Le Canada ralentit plus vite que les États-Unis. On entre en Hiver pendant que nos voisins sont encore en Automne — une divergence importante pour nos placements.</div>
+      </div>
+      <div class="country">
+        <div class="country-header"><div class="country-name">🇩🇪 Allemagne</div><span class="s-pill sp">🌱 Printemps · 58%</span></div>
+        <div class="country-note">La croissance repart grâce aux dépenses de défense, mais le signal reste faible à 58%. Les marchés allemands sont en baisse de 7% cette semaine — c'est la nervosité géopolitique, pas les fondamentaux.</div>
+      </div>
+      <div class="country">
+        <div class="country-header"><div class="country-name">🇨🇳 Chine</div><span class="s-pill sh">❄️ Hiver · 42%</span></div>
+        <div class="country-note">Secteur public en contraction. Mais le secteur privé surprend massivement (+4,4 pts sur les services). Les deux signaux se contredisent — confiance faible à 42%. Signal mixte à surveiller.</div>
+      </div>
+      <div class="country">
+        <div class="country-header"><div class="country-name">🇮🇱 Israël</div><span class="s-pill sa">🍂 Automne · 80%</span></div>
+        <div class="country-note">Résilient malgré le contexte géopolitique. Signal haussier maintenu.</div>
+      </div>
+    </div>
+
+    <div class="rule reveal">
+      <div class="label">🛢️ Alerte géopolitique — Détroit d'Ormuz</div>
+      <p>Les frappes USA/Israël sur l'Iran ont réduit le trafic de pétroliers de <strong>70%</strong> dans le Détroit d'Ormuz — un passage par lequel transite une grande partie du pétrole mondial. Le pétrole Brent a bondi de 10-13%. Le gaz européen a grimpé de 40%.</p>
+      <p style="margin-top:10px;"><strong>Impact direct :</strong> Ça renforce notre position XLE (énergie). Les données économiques des pays du Moyen-Orient (Arabie Saoudite, Émirats, Qatar, Koweït) sont considérées non fiables tant que la crise dure — mis en alerte dans le modèle.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S7 : VOYANTS -->
+<section id="s7" class="content-section">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal-left">07</div>
+      <div class="section-head-text reveal-right">
+        <div class="section-label">Seuils de préservation du capital</div>
+        <h2>Tableau de bord — Les voyants</h2>
+        <div class="en">Capital preservation dashboard</div>
+      </div>
+    </div>
+
+    <p class="reveal" style="color:var(--text2);margin-bottom:24px;">Ces indicateurs fonctionnent comme les voyants sur le tableau de bord d'une voiture. Quand ils passent au rouge, c'est le signal qu'il faut protéger son capital avant de chercher des gains.</p>
+
+    <div class="voyants stagger">
+      <div class="voyant v-warn">
+        <div class="voyant-label">🌡️ VIX — Indice de la peur</div>
+        <div class="voyant-val">22,88</div>
+        <div class="voyant-seuil">Seuil d'alerte : &gt; 26,94 · Marge : ~4 pts</div>
+        <div class="voyant-note">Le marché est nerveux mais pas en panique. Le vrai signal d'alarme commence au-dessus de 26,94.</div>
+        <div class="v-cat vc-warn">⚠️ Vigilance</div>
+      </div>
+      <div class="voyant v-warn">
+        <div class="voyant-label">💳 HY OAS — Stress du crédit</div>
+        <div class="voyant-val">~2,80%</div>
+        <div class="voyant-seuil">Seuil d'alerte : &gt; 3,00% · Marge : ~20 bps</div>
+        <div class="voyant-note">Mesure le stress dans le marché obligataire des entreprises à risque. Près du seuil — à surveiller.</div>
+        <div class="v-cat vc-warn">⚠️ Près du seuil</div>
+      </div>
+      <div class="voyant v-warn">
+        <div class="voyant-label">📐 Spread 2-10 ans</div>
+        <div class="voyant-val">~45 bps</div>
+        <div class="voyant-seuil">Seuil d'alerte : &lt; 40 bps · Marge : ~5 bps</div>
+        <div class="voyant-note">Mesure la forme de la courbe des taux. Historiquement, signal de récession dans 12-18 mois quand ça passe sous 40.</div>
+        <div class="v-cat vc-danger">🔴 Très près du seuil</div>
+      </div>
+      <div class="voyant v-warn">
+        <div class="voyant-label">🎯 ISM Services</div>
+        <div class="voyant-val">Ce matin</div>
+        <div class="voyant-seuil">Seuil d'alerte : &lt; 52,0</div>
+        <div class="voyant-note">Le chiffre tombe à 10h EST. C'est le catalyseur immédiat pour tous les autres voyants.</div>
+        <div class="v-cat vc-watch">📡 Catalyseur</div>
+      </div>
+      <div class="voyant v-danger">
+        <div class="voyant-label">👷 NFP — Emplois</div>
+        <div class="voyant-val">Est. 60k</div>
+        <div class="voyant-seuil">Seuil d'alerte : &lt; 80k · Vendredi</div>
+        <div class="voyant-note">On attend 60k vs 130k le mois dernier. Si confirmé, c'est le signal macro le plus fort de la semaine.</div>
+        <div class="v-cat vc-danger">🔴 Signal majeur</div>
+      </div>
+    </div>
+
+    <div class="explain reveal">
+      <div class="explain-icon">📖</div>
+      <p><strong>HY OAS (High Yield Spread) :</strong> La différence de taux entre les obligations d'entreprises risquées et les obligations gouvernementales sûres. Quand cet écart grandit, les investisseurs exigent plus de rendement pour prêter aux entreprises — signe qu'ils craignent des défauts de paiement. À plus de 3%, c'est un signal que le crédit commence à se tendre sérieusement.</p>
+    </div>
+    <div class="explain reveal">
+      <div class="explain-icon">📖</div>
+      <p><strong>Spread 2-10 ans :</strong> La différence entre le taux d'une obligation gouvernementale à 10 ans et celle à 2 ans. Normalement, le 10 ans rapporte plus. Quand cet écart rétrécit sous 40 bps, c'est historiquement l'un des meilleurs signaux avancés de récession — avec un délai de 12-18 mois. On est actuellement à seulement 5 bps du seuil.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S8 : PLAN D'ACTION -->
+<section id="s8" class="content-section">
+  <div class="inner">
+    <div class="section-header">
+      <div class="section-num reveal-left">08</div>
+      <div class="section-head-text reveal-right">
+        <div class="section-label">Notre processus aujourd'hui</div>
+        <h2>Plan d'action</h2>
+        <div class="en">Action plan — What we're watching and doing</div>
+      </div>
+    </div>
+
+    <p class="reveal" style="color:var(--text2);margin-bottom:24px;">Voici les décisions et les surveils actifs dans notre processus aujourd'hui. On documente notre raisonnement pour que vous puissiez suivre notre logique — pas pour vous dire quoi faire.</p>
+
+    <div class="steps stagger">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>ISM Services — 10h EST · Catalyseur immédiat</h3>
+          <ul>
+            <li><strong>Si &lt; 52 :</strong> On renforce la prudence. Les actions américaines risquent de suivre la faiblesse européenne — on ne coure pas après.</li>
+            <li><strong>Si &gt; 54 :</strong> Rebond technique possible, mais on attend la confirmation avant d'agir. Un seul chiffre ne fait pas une tendance.</li>
+            <li>On ne prend pas de décision sur SLV avant de voir ce chiffre.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>SLV (Argent) — Gérer le risque immédiatement</h3>
+          <ul>
+            <li>Momentum ET tendance baissiers. Le marché paye énormément pour se protéger contre une poursuite de la baisse.</li>
+            <li><strong>Option A :</strong> Sortir la position pour limiter les dégâts.</li>
+            <li><strong>Option B :</strong> Vendre des options pour profiter de la volatilité extrême (IV élevée = prime élevée).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>GLD (Or) — Tenir, ne pas ajouter</h3>
+          <ul>
+            <li>Le momentum s'est affaibli — l'or consolide. Mais la tendance reste haussière.</li>
+            <li>La corrélation or/énergie (0,798) confirme qu'on est dans le bon positionnement Automne.</li>
+            <li>On garde, on surveille. On n'ajoute pas de nouvelles unités.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Obligations (TLT/IEF) — Signal précoce à surveiller</h3>
+          <ul>
+            <li>Des obligations haussières en Automne = les investisseurs fuient vers la sécurité.</li>
+            <li>C'est souvent un signe avant-coureur de transition vers l'<strong>Hiver</strong>. Les obligations anticipent généralement le prochain régime avant les actions.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>NFP vendredi — Le vrai test de la semaine</h3>
+          <ul>
+            <li>Si ~60k emplois confirmés (vs 130k avant) : signal le plus fort depuis janvier que l'Automne est structurel.</li>
+            <li>On prépare les limites de perte sur les positions longues en actions dès maintenant.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="reveal" style="font-size:16px;font-weight:700;color:var(--text);margin:40px 0 16px;">Hiérarchie des signaux — Où en sommes-nous dans le cycle?</h3>
+
+    <div class="explain reveal">
+      <div class="explain-icon">📖</div>
+      <p>On regarde toujours les marchés à travers trois horizons : le <strong>Trade</strong> (la météo du jour), le <strong>Trend</strong> (la saison économique), et le <strong>Tail</strong> (le climat à long terme — le grand cycle). Notre décision la plus importante se prend toujours sur la base du Trend, pas du Trade.</p>
+    </div>
+
+    <div class="hierarchy stagger">
+      <div class="hier hier-warn">
+        <div class="hier-h">⚡ TRADE · &lt; 3 semaines</div>
+        <div class="hier-val">Détérioration</div>
+        <div class="hier-desc">Les mouvements à court terme sont sous pression. Avertissement actif — ne pas forcer d'entrées.</div>
+      </div>
+      <div class="hier hier-confirm">
+        <div class="hier-h">📈 TREND · &gt; 3 mois</div>
+        <div class="hier-val">🍂 Automne · 85%</div>
+        <div class="hier-desc">Direction fondamentale confirmée. Le régime est structurel, pas temporaire.</div>
+      </div>
+      <div class="hier hier-watch">
+        <div class="hier-h">🌐 TAIL · &lt; 3 ans</div>
+        <div class="hier-val">Sommet oct. 2025</div>
+        <div class="hier-desc">Le cycle long a atteint son sommet en octobre 2025. À surveiller pour la transition vers l'Hiver.</div>
+      </div>
+    </div>
+
+    <div class="next-report reveal">
+      <div>
+        <div class="next-label">Prochain rapport</div>
+        <div class="next-title">Lundi 9 mars 2026 · 7h30 EST</div>
+        <div class="next-sub">Parution chaque lundi matin — bilan de la semaine + setup macro</div>
+      </div>
+      <div class="next-icon">📡</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-logo">PasseGo · Salle de Guerre</div>
+  <p>Baromètre PasseGo · Rapport du 4 mars 2026 · 7h30 EST</p>
+  <div class="disclaimer">⚠️ Le Baromètre PasseGo est partagé à titre éducatif uniquement. Nous documentons notre propre démarche et positionnement — ce n'est pas un conseil d'investissement. Ce que nous faisons dans notre portefeuille ne convient pas nécessairement à votre situation. PasseGo n'est pas enregistré auprès de l'AMF. Les performances passées ne garantissent pas les résultats futurs. Consultez un conseiller financier agréé avant toute décision d'investissement. Sources : RegimeRadar Research, données macro 3-4 mars 2026, RegimeRadar CIP v4.</div>
+</footer>
+
+<script>
+const bar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  bar.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+});
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.stagger').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
